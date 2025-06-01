@@ -1,0 +1,15 @@
+.env.claude.backup
+.env*
+
+# Logs
+*.log
+
+.DS_Store
+
+.idea/
+.vscode/
+
+tmp/
+*.tmp
+
+node_modules/
