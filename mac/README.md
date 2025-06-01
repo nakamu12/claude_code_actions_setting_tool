@@ -1,30 +1,49 @@
-# claude_code_actions_setting_tool
+# Claude Code Actions Setting Tool
 
-CLI scripts to **install and maintain** the Claude PR Assistant GitHub Action across repositories.
+Cross‑platform shell scripts to set up and maintain the **Claude PR Assistant** GitHub Action.
 
+---
+## Supported OS
+| OS | Package manager assumed | Notes |
+|----|-------------------------|-------|
+| **macOS** | Homebrew (`brew`) | Uses Keychain for token storage |
+| **Linux** | `apt` (Debian/Ubuntu) fallback | If `security` is unavailable, reads `~/.claude_credentials.json` |
+| **Windows** | Chocolatey (`choco`) | Use Git Bash / PowerShell; token file fallback |
+
+> **Token storage on Linux/Windows**  
+> Save the JSON you see in Keychain on macOS to `~/.claude_credentials.json`.
+
+---
 ## Scripts
+| Script | macOS | Linux | Windows |
+|--------|-------|-------|---------|
+| `setup_account.sh` | ✅ | ✅* | ✅* |
+| `setup_repository.sh <owner/repo>` | ✅ | ✅ | ✅ |
+| `update_tokens.sh <owner/repo>` | ✅ | ✅ | ✅ |
 
-| Script | Purpose |
-|--------|---------|
-| `setup_account.sh` | Authenticate `gh` and fork the template repo. Run **once** per GitHub account. |
-| `setup_repository.sh <owner/repo>` | Upload Claude OAuth tokens as Secrets, copy `workflows/claude.yml`, and open a pull‑request. |
-| `update_tokens.sh <owner/repo>` | Refresh the three Secrets (access, refresh, expiresAt) whenever your Keychain updates. Ideal for cron. |
+\*Fork & App install open the default browser (`open`, `xdg-open`, or `start`).
 
-## Prerequisites
-- macOS with **Homebrew**
-- `gh`, `jq`, `git`, and `security` (auto‑installed if missing)
-- Keychain item named **"Claude Code-credentials"** containing JSON with `accessToken`, `refreshToken`, and `expiresAt`.
-
-## Usage
+---
+## Quick Start
 ```bash
-# One‑time account setup
+# 1. Account‑level prerequisites (once)
 ./setup_account.sh
 
-# Enable Claude PR Assistant on a repo
-./setup_repository.sh your-username/your-repo
+# 2. Enable Claude PR Assistant on a repo
+./setup_repository.sh myuser/myrepo
 
-# Periodic secret refresh (cron / launchd)
-./update_tokens.sh your-username/your-repo
+# 3. Refresh tokens periodically (cron / Task Scheduler)
+./update_tokens.sh myuser/myrepo
 ```
+
+---
+### FAQ
+- **Q: How do I install dependencies manually?**  
+  • macOS: `brew install gh jq`  
+  • Debian: `sudo apt-get install gh jq`  
+  • Windows (Admin): `choco install gh jq`
+
+- **Q: Where do I get tokens on Linux/Windows?**  
+  Obtain them once on macOS, or via browser dev tools, then place the JSON as `~/.claude_credentials.json`.
 
 ---
